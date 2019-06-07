@@ -1,4 +1,4 @@
-# Comp6231-A1
+# Comp6231-A2
 Assignment 1
 Distributed Event Management System
 
