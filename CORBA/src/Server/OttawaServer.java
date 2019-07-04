@@ -63,7 +63,7 @@ public class OttawaServer {
         try
         {
             aSocket = new DatagramSocket(OTTAWA_SERVER_PORT);
-            byte[] buffer = new byte[1000];
+            byte[] buffer = new byte[1500];
             System.out.println("Ottawa server started.....");
             //Server waits for the request
             while (true)
@@ -114,7 +114,7 @@ public class OttawaServer {
                 case "2":
                     return ottawaServer.removeEvent(eventID, eventType, userId);
                 case "3":
-                    return ottawaServer.listEventAvailability(eventType, userId);
+                    return ottawaServer.listEventAvailability(eventType, managerID);
                 case "4":
                     return ottawaServer.bookEvent(userId, eventID, eventType, bookingCapacity);
                 case "5":
@@ -122,7 +122,7 @@ public class OttawaServer {
                 case "6":
                     return ottawaServer.cancelEvent(userId, eventID, eventType);
                 case "7":
-                    return ottawaServer.nonOriginCustomerBooking(userId);
+                    return ottawaServer.nonOriginCustomerBooking(userId, eventID);
             }
         }
         catch (RemoteException e)

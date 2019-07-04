@@ -43,12 +43,52 @@ public class CommonUtils {
 
     public static final String OPERATIONFAILURE = "Operation Failure";
 
+    public static enum InputType 
+    {
+        CLIENT_ID, EVENT_ID
+    };
+
     public static void addFileHandler(Logger log, String fileName) throws SecurityException, IOException
     {
         log.setUseParentHandlers(false);
         FileHandler fileHandler = new FileHandler(System.getProperty("user.dir") + "/Records/" + fileName + ".log", true);
         log.addHandler(fileHandler);
         fileHandler.setFormatter(new SimpleFormatter());
+    }
+
+    public static boolean isInputValid(String id, InputType type)
+    {
+        if(type == InputType.CLIENT_ID)
+        {
+            String serverId   = id.substring(0, 3);
+            String clientType = id.substring(3, 4);
+            String clientID   = id.substring(4, 8);
+                
+            return id.length() == 8 && (clientType.equals(CUSTOMER_ClientType) || clientType.equals(EVENT_MANAGER_ClientType))
+                                    && (serverId.equals(TORONTO) || serverId.equals(MONTREAL) || serverId.equals(OTTAWA))
+                                    && (clientID.matches("^[0-9]+$"));
+        }
+        
+        if(type == InputType.EVENT_ID)
+        {
+            String serverId  = id.substring(0, 3);
+            String eventType = id.substring(3, 4);
+            String day       = id.substring(4, 6);
+            String month     = id.substring(6, 8);
+            String year      = id.substring(8, 10);
+                
+            return id.length() == 10 && (eventType.equals(MORNING) || eventType.equals(EVENING) || eventType.equals(AFTERNOON))
+                                     && (serverId.equals(TORONTO) || serverId.equals(MONTREAL) || serverId.equals(OTTAWA))
+                                     && (day.length() == 2 && day.matches("0[1-9]|[1-2][0-9]|3[0-1]")) 
+                                     && (month.length() == 2 && month.matches("0[1-9]|1[0-2]")) 
+                                     && (year.length() == 2 && year.matches("19|[2-9][0-9]"));
+        }
+        return false;
+    }
+    
+    public static String capitalize(String input)
+    {
+        return input.toUpperCase();
     }
 
 }

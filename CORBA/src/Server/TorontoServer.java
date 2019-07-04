@@ -63,7 +63,7 @@ public class TorontoServer {
         try
         {
             aSocket = new DatagramSocket(TORONTO_SERVER_PORT);
-            byte[] buffer = new byte[1000];
+            byte[] buffer = new byte[1500];
             System.out.println("Toronto server started.....");
             //Server waits for the request
             while (true)
@@ -114,7 +114,7 @@ public class TorontoServer {
                 case "2":
                     return torontoServer.removeEvent(eventID, eventType, userId);
                 case "3":
-                    return torontoServer.listEventAvailability(eventType, userId);
+                    return torontoServer.listEventAvailability(eventType, managerID);
                 case "4":
                     return torontoServer.bookEvent(userId, eventID, eventType, bookingCapacity);
                 case "5":
@@ -122,7 +122,7 @@ public class TorontoServer {
                 case "6":
                     return torontoServer.cancelEvent(userId, eventID, eventType);
                 case "7":
-                    return torontoServer.nonOriginCustomerBooking(userId);
+                    return torontoServer.nonOriginCustomerBooking(userId, eventID);
             }
         }
         catch (RemoteException e)

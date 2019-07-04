@@ -36,21 +36,21 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     {
         //item1
         databaseOttawa.put(CONFERENCE, new HashMap<>());
-        databaseOttawa.get(CONFERENCE).put("OTWM120819", "80");
-        databaseOttawa.get(CONFERENCE).put("OTWE251023", "40");
-        databaseOttawa.get(CONFERENCE).put("OTWA030326", "90");
+        databaseOttawa.get(CONFERENCE).put("OTWM999999", "999");
+//        databaseOttawa.get(CONFERENCE).put("OTWE251023", "40");
+//        databaseOttawa.get(CONFERENCE).put("OTWA030326", "90");
 
         //item2
         databaseOttawa.put(SEMINAR, new HashMap<>());
-        databaseOttawa.get(SEMINAR).put("OTWM140147", "50");
-        databaseOttawa.get(SEMINAR).put("OTWE020135", "40");
-        databaseOttawa.get(SEMINAR).put("OTWA260939", "90");
+//        databaseOttawa.get(SEMINAR).put("OTWM140147", "50");
+        databaseOttawa.get(SEMINAR).put("OTWE999999", "999");
+//        databaseOttawa.get(SEMINAR).put("OTWA260939", "90");
 
         //item6
         databaseOttawa.put(TRADESHOW, new HashMap<>());
-        databaseOttawa.get(TRADESHOW).put("OTWM070728", "50");
-        databaseOttawa.get(TRADESHOW).put("OTWE210322", "40");
-        databaseOttawa.get(TRADESHOW).put("OTWA090619", "90");
+//        databaseOttawa.get(TRADESHOW).put("OTWM070728", "50");
+//        databaseOttawa.get(TRADESHOW).put("OTWE210322", "40");
+        databaseOttawa.get(TRADESHOW).put("OTWA999999", "999");
     }
 
     public OttawaServerImpl() throws RemoteException
@@ -71,6 +71,17 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     public synchronized String addEvent(String eventID, String eventType, String bookingCapacity, String managerID) throws RemoteException
     {
         String message = null;
+        
+        if(!eventID.substring(0, 3).equals(OTTAWA))
+        {
+            message = "Operations Unsuccessful!. Event Not Added in Ottawa Server "
+                    + "for Event ID: " + eventID + " Event Type: " + eventType + " because the Event ID: " + eventID + ""
+                    + " is not of Ottawa format (OTW)";
+            logger.info(message);
+
+            return message;
+        }
+        
         logger.info("Received request to add an event with event id " + eventID + " , Event Type" + eventType
                 + " & Booking Capacity " + bookingCapacity);
         if (!databaseOttawa.get(eventType).containsKey(eventID))
@@ -159,27 +170,27 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
         if (managerID.substring(0, 3).equals(MONTREAL))
         {
             logger.info("Requesting other server from Server: " + TORONTO_SERVER_NAME);
-            String torrontoEvents = requestToOtherServers(null, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
+            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
             logger.info("Requesting other server from Server: " + OTTAWA_SERVER_NAME);
-            String ottawaEvents = requestToOtherServers(null, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
+            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
             returnMessage.append(torrontoEvents).append("\n\n").append(ottawaEvents).append("\n\n");
 
         }
         if (managerID.substring(0, 3).equals(TORONTO))
         {
             logger.info("Requesting other server from Server: " + MONTREAL_SERVER_NAME);
-            String montrealEvents = requestToOtherServers(null, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
+            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
             logger.info("Requesting other server from Server: " + OTTAWA_SERVER_NAME);
-            String ottawaEvents = requestToOtherServers(null, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
+            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
 
             returnMessage.append(ottawaEvents).append("\n\n").append(montrealEvents).append("\n\n");
         }
         if (managerID.substring(0, 3).equals(OTTAWA))
         {
             logger.info("Requesting other server from Server: " + MONTREAL_SERVER_NAME);
-            String montrealEvents = requestToOtherServers(null, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
+            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
             logger.info("Requesting other server from Server: " + TORONTO_SERVER_NAME);
-            String torrontoEvents = requestToOtherServers(null, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
+            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
 
             returnMessage.append(torrontoEvents).append("\n\n").append(montrealEvents).append("\n\n");
         }
@@ -209,9 +220,9 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     {
         if (!customerID.substring(0, 3).equals(OTTAWA) && !customerID.substring(0, 3).equals(eventID.substring(0, 3)))
         {
-            int customerBookingsCurrent = Integer.parseInt(this.nonOriginCustomerBooking(customerID));
-            int customerBookingsOther = customerID.substring(0, 3).equals(MONTREAL) ? Integer.parseInt(requestToOtherServers(customerID, null, null, 7, null, TORONTO_SERVER_PORT, null).trim())
-                    : Integer.parseInt(requestToOtherServers(customerID, null, null, 7, null, MONTREAL_SERVER_PORT, null).trim());
+            int customerBookingsCurrent = Integer.parseInt(this.nonOriginCustomerBooking(customerID, eventID));
+            int customerBookingsOther = customerID.substring(0, 3).equals(MONTREAL) ? Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, TORONTO_SERVER_PORT, null).trim())
+                    : Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, MONTREAL_SERVER_PORT, null).trim());
 
             if (customerBookingsCurrent + customerBookingsOther >= 3)
             {
@@ -292,22 +303,40 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String nonOriginCustomerBooking(String customerID)
+    public synchronized String nonOriginCustomerBooking(String customerID, String eventID)
     {
         int numberOfCustomerEvents = 0;
         if (customerEventsMapping.containsKey(customerID))
         {
             if (customerEventsMapping.get(customerID).containsKey(CONFERENCE))
             {
-                numberOfCustomerEvents += customerEventsMapping.get(customerID).get(CONFERENCE).keySet().size();
+                for (String currentEventID : customerEventsMapping.get(customerID).get(CONFERENCE).keySet())
+                {
+                    if (eventID.substring(6, 8).equals(currentEventID.substring(6, 8)))
+                    {
+                        numberOfCustomerEvents++;
+                    }
+                }
             }
             if (customerEventsMapping.get(customerID).containsKey(SEMINAR))
             {
-                numberOfCustomerEvents += customerEventsMapping.get(customerID).get(SEMINAR).keySet().size();
+                for (String currentEventID : customerEventsMapping.get(customerID).get(SEMINAR).keySet())
+                {
+                    if (eventID.substring(6, 8).equals(currentEventID.substring(6, 8)))
+                    {
+                        numberOfCustomerEvents++;
+                    }
+                }
             }
             if (customerEventsMapping.get(customerID).containsKey(TRADESHOW))
             {
-                numberOfCustomerEvents += customerEventsMapping.get(customerID).get(TRADESHOW).keySet().size();
+                for (String currentEventID : customerEventsMapping.get(customerID).get(TRADESHOW).keySet())
+                {
+                    if (eventID.substring(6, 8).equals(currentEventID.substring(6, 8)))
+                    {
+                        numberOfCustomerEvents++;
+                    }
+                }
             }
         }
         return "" + numberOfCustomerEvents;
@@ -426,14 +455,14 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     public String requestToOtherServers(String userID, String eventID, String bookingCapacity, int serverNumber, String eventType, int serPort, String managerId)
     {
         int serverPort;
-        if (eventID != null)
-        {
-            serverPort = serverPortSelection(eventID);
-        }
-        else
-        {
+//        if (eventID != null)
+//        {
+//            serverPort = serverPortSelection(eventID);
+//        }
+//        else
+//        {
             serverPort = serPort;
-        }
+//        }
         String stringServer = Integer.toString(serverNumber);
         DatagramSocket aSocket = null;
         String response = null;
