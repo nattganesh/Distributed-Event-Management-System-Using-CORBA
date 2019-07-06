@@ -7,14 +7,18 @@
  */
 package Client;
 
+import CommonUtils.CommonUtils;
+import EventManagementServerApp.ServerInterface;
+import EventManagementServerApp.ServerInterfaceHelper;
 import ServerImpl.MontrealServerImpl;
 import ServerImpl.OttawaServerImpl;
 import ServerImpl.TorontoServerImpl;
-import ServerInterface.ServerInterface;
+import org.omg.CORBA.ORB;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
@@ -34,9 +38,27 @@ public class Client {
 
     public static void main(String[] args)
     {
+        try {
+            ORB orb = ORB.init(args, null);
+            org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+
+            ServerInterface mtlobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(MONTREAL_SERVER_NAME));
+            ServerInterface torobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(TORONTO_SERVER_NAME));
+            ServerInterface otawaobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(OTTAWA_SERVER_NAME));
+            
+            
+
+        }
+        catch (Exception e) {
+            System.out.println("Hello Client exception: " + e);
+            e.printStackTrace();
+        }
+        
         String id = enterValidID(InputType.CLIENT_ID);
         clientService(id.substring(0, 3), id.substring(4,8),id.substring(3, 4));
     }
+    
 
     private static void clientService(String serverId, String clientID, String clientType)
     {
@@ -65,7 +87,7 @@ public class Client {
         }
     }
 
-    private static void runCustomerMenu(ServerInterface server, String customerID) throws RemoteException
+    private static void runCustomerMenu(ServerInterface server, String customerID)
     {
         String itemNum = "";
         while (!itemNum.equals("0"))
@@ -80,7 +102,7 @@ public class Client {
             System.out.println("============================");
 
             itemNum = scanner.next().trim();
-            
+
             if (itemNum.matches("^[0-4]$"))
             {
                 switch (itemNum)
@@ -127,7 +149,7 @@ public class Client {
         scanner.close();
     }
 
-    private static void runManagerMenu(ServerInterface server, String managerID) throws RemoteException
+    private static void runManagerMenu(ServerInterface server, String managerID)
     {
         String itemNum = "";
         while (!itemNum.equals("0"))
@@ -144,7 +166,7 @@ public class Client {
             System.out.println("============================");
 
             itemNum = scanner.next().trim();
-            
+
             if (itemNum.matches("^[0-6]$"))
             {
                 switch (itemNum)
@@ -217,7 +239,7 @@ public class Client {
             LOGGER.log(Level.INFO, "Response of server: {0}", string);
             System.out.println("Response of server: " + string);
         }
-        catch (RemoteException ex)
+        catch (Exception ex)
         {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -242,7 +264,7 @@ public class Client {
             System.out.println("Response of the server: " + string);
             LOGGER.log(Level.INFO, "Response of server: {0}", string);
         }
-        catch (RemoteException ex)
+        catch (Exception ex)
         {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -257,13 +279,13 @@ public class Client {
             System.out.println(str);
             LOGGER.log(Level.INFO, "Response of Server: {0}", str);
         }
-        catch (RemoteException ex)
+        catch (Exception ex)
         {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private static void runBookEvent(ServerInterface server, String customerID) throws RemoteException
+    private static void runBookEvent(ServerInterface server, String customerID)
     {
         System.out.println("What type of event do you wish to book? (Available Options: A: CONFERENCE, B: TRADESHOW, C: SEMINAR)");
         String eventType = getEventType();
@@ -277,7 +299,7 @@ public class Client {
         System.out.println(msg);
     }
 
-    private static void runBookingSchedule(ServerInterface server, String customerID, String managerId) throws RemoteException
+    private static void runBookingSchedule(ServerInterface server, String customerID, String managerId)
     {
         LOGGER.log(Level.INFO, "Booking Schedule Requested by {0}", customerID);
         System.out.println(customerID + "'s Bookings Schedule");
@@ -327,7 +349,7 @@ public class Client {
             default:       return "Server Does Not Exist";
         }
     }
-    
+
     public static String getNumber()
     {
         String num = scanner.next().trim();
@@ -341,7 +363,7 @@ public class Client {
         }
         return num;
     }
-        
+
     private static String enterValidID(InputType type)
     {
         String msg = "";

@@ -7,7 +7,9 @@ module EventManagementServerApp{
 	 	string bookEvent(in string customerID,in string eventID,in string eventType,in string bookingAmount);
 	 	string getBookingSchedule(in string customerID,in string managerID);
 	 	string cancelEvent(in string customerID,in string eventID,in string eventType);
-	 	string nonOriginCustomerBooking(in string customerID); 
-		
+	 	string nonOriginCustomerBooking(in string customerID, in string eventID);
+		string swapEvent(in string customerID, in string newEventID, in string newEventType, in string oldEventID, in string oldEventType);
+		string eventAvailable(in string eventID, in string eventType);
+		string validateBooking(in string customerID, in string eventID, in string eventType);
 	};
 };

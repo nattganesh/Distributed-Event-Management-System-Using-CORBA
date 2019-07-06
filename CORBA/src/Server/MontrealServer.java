@@ -7,7 +7,23 @@
  */
 package Server;
 
+import CommonUtils.CommonUtils;
+import EventManagementServerApp.ServerInterface;
+import EventManagementServerApp.ServerInterfaceHelper;
 import ServerImpl.MontrealServerImpl;
+//import ServerInterface.ServerInterface;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -28,7 +44,7 @@ import static CommonUtils.CommonUtils.MONTREAL_SERVER_PORT;
  */
 public class MontrealServer {
 
-    public static void main(String[] args) throws RemoteException
+    public static void main(String[] args)
     {
         // TODO code application logic here
         MontrealServerImpl montrealServerStub = new MontrealServerImpl();
@@ -38,26 +54,55 @@ public class MontrealServer {
             receiveRequestsFromOthers(montrealServerStub);
         };
 
+        Runnable task1 = () -> {
+            handleMontrealRequests(montrealServerStub,args);
+        };
         Thread thread = new Thread(runnable);
+        Thread thread1 = new Thread(task1);
         thread.start();
+        thread1.start();
 
-        Registry registry = LocateRegistry.createRegistry(MONTREAL_SERVER_PORT);
 
-        try
-        {
-            registry.bind(MONTREAL_SERVER_NAME, montrealServerStub);
-        }
-        catch (RemoteException e)
-        {
-            e.printStackTrace();
-        }
-        catch (AlreadyBoundException e)
-        {
-            e.printStackTrace();
+       // Registry registry = LocateRegistry.createRegistry(MONTREAL_SERVER_PORT);
+
+//        try
+//        {
+//            registry.bind(MONTREAL_SERVER_NAME, montrealServerStub);
+//        }
+//        catch (RemoteException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        catch (AlreadyBoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+
+    }
+    private static void handleMontrealRequests(MontrealServerImpl monImpl, String[] args) {
+        ORB orb = ORB.init(args, null);
+        try {
+            POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+            rootPoa.the_POAManager().activate();
+
+            monImpl.setOrb(orb);
+
+            ServerInterface href = ServerInterfaceHelper.narrow(rootPoa.servant_to_reference(monImpl));
+
+            NamingContextExt namingContextReference = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
+            NameComponent[] path = namingContextReference.to_name(MONTREAL_SERVER_NAME);
+
+            namingContextReference.rebind(path, href);
+            System.out.println("Montreal Server is ready");
+            while(true) {
+                orb.run();
+            }
+
+        } catch (InvalidName | AdapterInactive | org.omg.CosNaming.NamingContextPackage.InvalidName | ServantNotActive | WrongPolicy | NotFound | CannotProceed e) {
+            System.out.println("Something went wrong in montreal server: "+e.getMessage());
         }
 
     }
-
     private static void receiveRequestsFromOthers(MontrealServerImpl monStub)
     {
         DatagramSocket aSocket = null;
@@ -134,7 +179,7 @@ public class MontrealServer {
                     return montrealServer.validateBooking(userId, eventID, eventType);
             }
         }
-        catch (RemoteException e)
+        catch (Exception e)
         {
             
         }

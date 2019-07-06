@@ -1,0 +1,21 @@
+Jun 01, 2019 7:15:46 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWE100519| Booking Capacity 9
+EventID: OTWA100519| Booking Capacity 9
+
+Jun 01, 2019 7:15:52 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWE100519| Booking Capacity 9
+EventID: OTWA100519| Booking Capacity 9
+
+Jun 01, 2019 7:15:59 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWE12345| Booking Capacity 12
+EventID: OTWA100519| Booking Capacity 3
+EventID: OTWM100519| Booking Capacity 5
+
+Jun 01, 2019 7:16:03 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWA100519| Booking Capacity 8
+EventID: OTWM100519| Booking Capacity 2
+
+Jun 01, 2019 7:16:33 PM Client.Client managerAddEvent
+INFO: Manager: 1232 adding a new Event with Event id: OTWA081220 ,Event Type: Seminars and Booking Capacity: 2
+Jun 01, 2019 7:16:33 PM Client.Client managerAddEvent
+INFO: Response of server: Operations Successful!. Event Added in Montreal Server for Event ID: OTWA081220 Event Type: Seminars Booking Capacity: 2

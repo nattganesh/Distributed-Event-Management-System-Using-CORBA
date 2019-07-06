@@ -7,7 +7,10 @@
  */
 package ServerImpl;
 
-import ServerInterface.ServerInterface;
+//import ServerInterface.ServerInterface;
+import EventManagementServerApp.ServerInterface;
+import EventManagementServerApp.ServerInterfacePOA;
+import org.omg.CORBA.ORB;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -26,8 +29,9 @@ import static CommonUtils.CommonUtils.*;
  *
  * @author Gursimran Singh, Natheepan Ganeshamoorthy
  */
-public class OttawaServerImpl extends UnicastRemoteObject implements ServerInterface {
+public class OttawaServerImpl extends ServerInterfacePOA {
 
+    private ORB orb;
     private static HashMap<String, HashMap< String, String>> databaseOttawa = new HashMap<>();
     private static HashMap<String, HashMap<String, HashMap< String, Integer>>> customerEventsMapping = new HashMap<>();
     private static Logger logger;
@@ -53,7 +57,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
         databaseOttawa.get(TRADESHOW).put("OTWA999999", "999");
     }
 
-    public OttawaServerImpl() throws RemoteException
+    public OttawaServerImpl()
     {
         super();
         logger = Logger.getLogger(OttawaServerImpl.class.getName());
@@ -67,8 +71,16 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
         }
     }
 
+    public ORB getOrb() {
+        return orb;
+    }
+
+    public void setOrb(ORB orb) {
+        this.orb = orb;
+    }
+
     @Override
-    public synchronized String addEvent(String eventID, String eventType, String bookingCapacity, String managerID) throws RemoteException
+    public synchronized String addEvent(String eventID, String eventType, String bookingCapacity, String managerID)
     {
         String message = null;
         
@@ -106,7 +118,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String removeEvent(String eventID, String eventType, String managerID) throws RemoteException
+    public synchronized String removeEvent(String eventID, String eventType, String managerID)
     {
         String message = null;
         if (databaseOttawa.get(eventType).containsKey(eventID))
@@ -161,7 +173,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String listEventAvailability(String eventType, String managerID) throws RemoteException
+    public synchronized String listEventAvailability(String eventType, String managerID)
     {
         //Eg: Seminars - MTLE130519 3, OTWA060519 6, TORM180519 0, MTLE190519 2.
         String message = null;
@@ -216,7 +228,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String bookEvent(String customerID, String eventID, String eventType, String bookingAmount) throws RemoteException
+    public synchronized String bookEvent(String customerID, String eventID, String eventType, String bookingAmount)
     {
         if (!customerID.substring(0, 3).equals(OTTAWA) && !customerID.substring(0, 3).equals(eventID.substring(0, 3)))
         {
@@ -343,7 +355,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String getBookingSchedule(String customerID, String managerID) throws RemoteException
+    public synchronized String getBookingSchedule(String customerID, String managerID)
     {
         String returnMsg = "";
         if(managerID != null && managerID.equalsIgnoreCase("Default")) managerID = null;
@@ -405,7 +417,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
     }
 
     @Override
-    public synchronized String cancelEvent(String customerID, String eventID, String eventType) throws RemoteException
+    public synchronized String cancelEvent(String customerID, String eventID, String eventType)
     {
         switch (eventID.substring(0, 3))
         {
@@ -583,7 +595,7 @@ public class OttawaServerImpl extends UnicastRemoteObject implements ServerInter
                 });
                 return msg + "\nOperation successful, Swap Event Requested by " + customerID + " for New Event Type " + newEventType + " with New Event ID " + newEventID + " with Old Event Type " + oldEventType + " with old Event ID " + oldEventID + " has been swaped. ";
             }
-            catch (RemoteException ex)
+            catch (Exception ex)
             {
 
             }

@@ -1,0 +1,9 @@
+Jun 01, 2019 7:18:55 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWE12345| Booking Capacity 12
+EventID: OTWA100519| Booking Capacity 3
+EventID: OTWM100519| Booking Capacity 5
+
+Jun 01, 2019 7:19:22 PM Client.Client managerListEvents
+INFO: Response of Server: EventID: OTWE100519| Booking Capacity 9
+EventID: OTWA100519| Booking Capacity 9
+

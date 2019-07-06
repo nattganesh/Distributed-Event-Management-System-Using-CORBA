@@ -1,0 +1,4 @@
+Jun 01, 2019 7:14:32 PM Client.Client runBookingSchedule
+INFO: Booking Schedule Requested by MTLC3456
+Jun 01, 2019 7:14:32 PM Client.Client runBookingSchedule
+INFO: Operation Failure. Records for MTLC3456 do not exist.

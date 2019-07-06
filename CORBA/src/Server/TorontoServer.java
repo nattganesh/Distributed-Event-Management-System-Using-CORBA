@@ -7,7 +7,22 @@
  */
 package Server;
 
+import EventManagementServerApp.ServerInterface;
+import EventManagementServerApp.ServerInterfaceHelper;
+import ServerImpl.OttawaServerImpl;
 import ServerImpl.TorontoServerImpl;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.NameComponent;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
+import org.omg.PortableServer.POAPackage.ServantNotActive;
+import org.omg.PortableServer.POAPackage.WrongPolicy;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -19,8 +34,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import static CommonUtils.CommonUtils.TORONTO_SERVER_NAME;
-import static CommonUtils.CommonUtils.TORONTO_SERVER_PORT;
+import static CommonUtils.CommonUtils.*;
 
 /**
  *
@@ -28,7 +42,7 @@ import static CommonUtils.CommonUtils.TORONTO_SERVER_PORT;
  */
 public class TorontoServer {
 
-    public static void main(String[] args) throws RemoteException
+    public static void main(String[] args)
     {
 
         TorontoServerImpl torontoServerStub = new TorontoServerImpl();
@@ -37,26 +51,55 @@ public class TorontoServer {
             receiveRequestsFromOthers(torontoServerStub);
         };
 
+        Runnable task1 = () -> {
+            handleTorrontoRequests(torontoServerStub,args);
+        };
         Thread thread = new Thread(runnable);
+        Thread thread1 = new Thread(task1);
         thread.start();
+        thread1.start();
 
-        Registry registry = LocateRegistry.createRegistry(TORONTO_SERVER_PORT);
 
-        try
-        {
-            registry.bind(TORONTO_SERVER_NAME, torontoServerStub);
-        }
-        catch (RemoteException e)
-        {
-            e.printStackTrace();
-        }
-        catch (AlreadyBoundException e)
-        {
-            e.printStackTrace();
+//        Registry registry = LocateRegistry.createRegistry(TORONTO_SERVER_PORT);
+//
+//        try
+//        {
+//            registry.bind(TORONTO_SERVER_NAME, torontoServerStub);
+//        }
+//        catch (RemoteException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        catch (AlreadyBoundException e)
+//        {
+//            e.printStackTrace();
+//        }
+
+    }
+    private static void handleTorrontoRequests(TorontoServerImpl torontoServer, String[] args) {
+        ORB orb = ORB.init(args, null);
+        try {
+            POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+            rootPoa.the_POAManager().activate();
+
+            torontoServer.setOrb(orb);
+
+            ServerInterface href = ServerInterfaceHelper.narrow(rootPoa.servant_to_reference(torontoServer));
+
+            NamingContextExt namingContextReference = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
+            NameComponent[] path = namingContextReference.to_name(TORONTO_SERVER_NAME);
+
+            namingContextReference.rebind(path, href);
+            System.out.println("Toronto Server is ready");
+            while(true) {
+                orb.run();
+            }
+
+        } catch (InvalidName | AdapterInactive | org.omg.CosNaming.NamingContextPackage.InvalidName | ServantNotActive | WrongPolicy | NotFound | CannotProceed e) {
+            System.out.println("Something went wrong in Toronto server: "+e.getMessage());
         }
 
     }
-
     private static void receiveRequestsFromOthers(TorontoServerImpl torontoServer)
     {
         DatagramSocket aSocket = null;
@@ -133,7 +176,7 @@ public class TorontoServer {
                     return torontoServer.validateBooking(userId, eventID, eventType);
             }
         }
-        catch (RemoteException e)
+        catch (Exception e)
         {
             
         }
