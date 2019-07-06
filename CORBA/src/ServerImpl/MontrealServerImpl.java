@@ -598,12 +598,14 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
     @Override
     public String eventAvailable(String eventID, String eventType)
     {
+        eventType = eventType.substring(0,3).equalsIgnoreCase("CON")? CONFERENCE : eventType.substring(0,3).equalsIgnoreCase("SEM")? SEMINAR : TRADESHOW;
         return (databaseMontreal.containsKey(eventType) && databaseMontreal.get(eventType).containsKey(eventID) && Integer.parseInt(databaseMontreal.get(eventType).get(eventID)) > 0) ? "1" : "0";
     }
 
     @Override
     public String validateBooking(String customerID, String eventID, String eventType)
     {
+        eventType = eventType.substring(0,3).equalsIgnoreCase("CON")? CONFERENCE : eventType.substring(0,3).equalsIgnoreCase("SEM")? SEMINAR : TRADESHOW;
         return (customerEventsMapping.containsKey(customerID) && customerEventsMapping.get(customerID).containsKey(eventType)  && customerEventsMapping.get(customerID).get(eventType).containsKey(eventID)) ? "1" : "0";
     }
 }
