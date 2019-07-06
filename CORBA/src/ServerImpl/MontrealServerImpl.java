@@ -171,27 +171,27 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         if (managerID.substring(0, 3).equals(MONTREAL))
         {
             logger.info("Requesting other server from Server: " + TORONTO_SERVER_NAME);
-            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
+            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT, null, null, null);
             logger.info("Requesting other server from Server: " + OTTAWA_SERVER_NAME);
-            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
+            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT, null, null, null);
             returnMessage.append(torrontoEvents).append("\n\n").append(ottawaEvents).append("\n\n");
 
         }
         if (managerID.substring(0, 3).equals(TORONTO))
         {
             logger.info("Requesting other server from Server: " + MONTREAL_SERVER_NAME);
-            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
+            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT, null, null, null);
             logger.info("Requesting other server from Server: " + OTTAWA_SERVER_NAME);
-            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT,null);
+            String ottawaEvents = requestToOtherServers(managerID, null, null, 3, eventType, OTTAWA_SERVER_PORT, null, null, null);
 
             returnMessage.append(ottawaEvents).append("\n\n").append(montrealEvents).append("\n\n");
         }
         if (managerID.substring(0, 3).equals(OTTAWA))
         {
             logger.info("Requesting other server from Server: " + MONTREAL_SERVER_NAME);
-            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT,null);
+            String montrealEvents = requestToOtherServers(managerID, null, null, 3, eventType, MONTREAL_SERVER_PORT, null, null, null);
             logger.info("Requesting other server from Server: " + TORONTO_SERVER_NAME);
-            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT,null);
+            String torrontoEvents = requestToOtherServers(managerID, null, null, 3, eventType, TORONTO_SERVER_PORT, null, null, null);
 
             returnMessage.append(torrontoEvents).append("\n\n").append(montrealEvents).append("\n\n");
         }
@@ -222,8 +222,8 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         if (!customerID.substring(0, 3).equals(MONTREAL) && !customerID.substring(0, 3).equals(eventID.substring(0, 3)))
         {
             int customerBookingsCurrent = Integer.parseInt(this.nonOriginCustomerBooking(customerID, eventID));
-            int customerBookingsOther = customerID.substring(0, 3).equals(OTTAWA) ? Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, TORONTO_SERVER_PORT, null).trim())
-                    : Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, OTTAWA_SERVER_PORT, null).trim());
+            int customerBookingsOther = customerID.substring(0, 3).equals(OTTAWA) ? Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, TORONTO_SERVER_PORT, null, null, null).trim())
+                    : Integer.parseInt(requestToOtherServers(customerID, eventID, null, 7, null, OTTAWA_SERVER_PORT, null, null, null).trim());
 
             if (customerBookingsCurrent + customerBookingsOther >= 3)
             {
@@ -295,11 +295,11 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         }
         if (eventID.substring(0, 3).equals(TORONTO))
         {
-            return requestToOtherServers(customerID, eventID, bookingAmount, 4, eventType, TORONTO_SERVER_PORT,null);
+            return requestToOtherServers(customerID, eventID, bookingAmount, 4, eventType, TORONTO_SERVER_PORT, null, null, null);
         }
         if (eventID.substring(0, 3).equals(OTTAWA))
         {
-            return requestToOtherServers(customerID, eventID, bookingAmount, 4, eventType, OTTAWA_SERVER_PORT,null);
+            return requestToOtherServers(customerID, eventID, bookingAmount, 4, eventType, OTTAWA_SERVER_PORT, null, null, null);
         }
         return "";
     }
@@ -317,8 +317,8 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
 
         if ((customerID.substring(0, 3).equals(MONTREAL) && managerID == null)||(managerID != null && managerID.substring(0, 3).equals(MONTREAL)))
         {
-            returnMsg += requestToOtherServers(customerID, null, null, 5, null, TORONTO_SERVER_PORT,null);
-            returnMsg += requestToOtherServers(customerID, null, null, 5, null, OTTAWA_SERVER_PORT,null);
+            returnMsg += requestToOtherServers(customerID, null, null, 5, null, TORONTO_SERVER_PORT, null, null, null);
+            returnMsg += requestToOtherServers(customerID, null, null, 5, null, OTTAWA_SERVER_PORT, null, null, null);
         }
         if (customerEvents != null && !customerEvents.isEmpty())
         {
@@ -406,9 +406,9 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
                 logger.log(Level.INFO, "This event does not exist in customer record.");
                 return "This event does not exist in customer record.";
             case TORONTO:
-                return requestToOtherServers(customerID, eventID, null, 6, eventType, TORONTO_SERVER_PORT,null);
+                return requestToOtherServers(customerID, eventID, null, 6, eventType, TORONTO_SERVER_PORT, null, null, null);
             case OTTAWA:
-                return requestToOtherServers(customerID, eventID, null, 6, eventType, OTTAWA_SERVER_PORT,null);
+                return requestToOtherServers(customerID, eventID, null, 6, eventType, OTTAWA_SERVER_PORT, null, null, null);
             default:
                 break;
         }
@@ -455,7 +455,7 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         return "" + numberOfCustomerEvents;
     }
 
-    public String requestToOtherServers(String userID, String eventID, String bookingCapacity, int serverNumber, String eventType, int serPort, String managerId)
+    public String requestToOtherServers(String userID, String eventID, String bookingCapacity, int serverNumber, String eventType, int serPort, String managerId, String newEventID, String newEventType)
     {
         int serverPort;
 //        if (eventID != null)
@@ -464,7 +464,7 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
 //        }
 //        else
 //        {
-            serverPort = serPort;
+        serverPort = serPort;
 //        }
         String stringServer = Integer.toString(serverNumber);
         DatagramSocket aSocket = null;
@@ -474,11 +474,13 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         String eventIDName = eventID != null ? eventID : "Default";
         String bookingCap = bookingCapacity != null ? bookingCapacity : "Default";
         String managerID = managerId != null ? managerId : "Default";
+        String new_EventID = newEventID != null ? newEventID : "Default";
+        String new_EventType = newEventType != null ? newEventType : "Default";
 
         try
         {
             aSocket = new DatagramSocket();
-            String message = userIDName.concat(" ").concat(eventIDName).concat(" ").concat(stringServer).concat(" ").concat(eventTypeName).concat(" ").concat(bookingCap).concat(" ").concat(managerID);
+            String message = userIDName.concat(" ").concat(eventIDName).concat(" ").concat(stringServer).concat(" ").concat(eventTypeName).concat(" ").concat(bookingCap).concat(" ").concat(managerID).concat(" ").concat(new_EventID).concat(" ").concat(new_EventType);
             InetAddress host = InetAddress.getByName("localhost");
             DatagramPacket sendPacket = new DatagramPacket(message.getBytes(), message.length(), host, serverPort);
             aSocket.send(sendPacket);
@@ -491,7 +493,7 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
         }
         catch (IOException e)
         {
-            
+
         }
         finally
         {
@@ -501,5 +503,107 @@ public class MontrealServerImpl extends UnicastRemoteObject implements ServerInt
             }
         }
         return response;
+    }
+
+    @Override
+    public String swapEvent(String customerID, String newEventID, String newEventType, String oldEventID, String oldEventType)
+    {
+        boolean isNewEventValid = false;
+        boolean isOldEventValid = false;
+        boolean isCustomerEligibleToBook = true;
+
+        if (newEventID.substring(0, 3).equals(MONTREAL))
+        {
+            isNewEventValid = eventAvailable(newEventID, newEventType).trim().equals("1");
+        }
+        else
+        {
+            isNewEventValid = requestToOtherServers(customerID, oldEventID, null, 9, oldEventType, newEventID.substring(0, 3).equals(OTTAWA) ? OTTAWA_SERVER_PORT : TORONTO_SERVER_PORT, null, newEventID, newEventType).trim().equals("1");
+        }
+
+        if (!isNewEventValid)
+        {
+            logger.log(Level.INFO, "Operation Unsuccessful, Swap Event Requested by {0} for New Event Type {1} with New Event ID {2} with Old Event Type {3} with old Event ID {4}  cannot be swaped. "
+                    + "New Event is Invalid", new Object[]
+                    {
+                        customerID, newEventType, newEventID, oldEventType, oldEventID
+                    });
+            return "Operation Unsuccessful, Swap Event Requested by " + customerID + " for New Event Type " + newEventType + " with New Event ID " + newEventID + " with Old Event Type " + oldEventType + " with old Event ID " + oldEventID + " cannot be swaped. "
+                    + "\nNew Event is Invalid";
+        }
+
+        if (oldEventID.substring(0, 3).equals(MONTREAL))
+        {
+            isOldEventValid = validateBooking(customerID, oldEventID, oldEventType).trim().equals("1");
+        }
+        else
+        {
+            isOldEventValid = requestToOtherServers(customerID, oldEventID, null, 10, oldEventType, newEventID.substring(0, 3).equals(OTTAWA) ? OTTAWA_SERVER_PORT : TORONTO_SERVER_PORT, null, newEventID, newEventType).trim().equals("1");
+        }
+
+        if (!isOldEventValid)
+        {
+            logger.log(Level.INFO, "Operation Unsuccessful, Swap Event Requested by {0} for New Event Type {1} with New Event ID {2} with Old Event Type {3} with old Event ID {4}  cannot be swaped. "
+                    + "Old Event is Invalid", new Object[]
+                    {
+                        customerID, newEventType, newEventID, oldEventType, oldEventID
+                    });
+            return "Operation Unsuccessful, Swap Event Requested by " + customerID + " for New Event Type " + newEventType + " with New Event ID " + newEventID + " with Old Event Type " + oldEventType + " with old Event ID " + oldEventID + " cannot be swaped. "
+                    + "\nOld Event is Invalid";
+        }
+        
+        if(customerID.substring(0, 3).equals(MONTREAL) && newEventID.substring(0, 3).equals(MONTREAL)) isCustomerEligibleToBook = true;
+        else if(!customerID.substring(0, 3).equals(oldEventID.substring(0, 3)) && !oldEventID.substring(0, 3).equals(MONTREAL)) isCustomerEligibleToBook = true;
+        else if (!customerID.substring(0, 3).equals(MONTREAL) && !customerID.substring(0, 3).equals(newEventID.substring(0, 3)))
+        {
+            int customerBookingsCurrent = Integer.parseInt(this.nonOriginCustomerBooking(customerID, newEventID));
+            int customerBookingsOther = customerID.substring(0, 3).equals(OTTAWA) ? Integer.parseInt(requestToOtherServers(customerID, newEventID, null, 7, null, TORONTO_SERVER_PORT, null, null, null).trim())
+                    : Integer.parseInt(requestToOtherServers(customerID, newEventID, null, 7, null, OTTAWA_SERVER_PORT, null, null, null).trim());
+
+            if (customerBookingsCurrent + customerBookingsOther >= 3)
+            {
+                isCustomerEligibleToBook = false;
+                logger.log(Level.INFO, "Operation Unsuccessful, Swap Event Requested by {0} for New Event Type {1} with New Event ID {2} with Old Event Type {3} with old Event ID {4}  cannot be swaped. "
+                                     + "Customer can book as many events in his/her own city, but only at most 3 events from other cities overall in a month", new Object[]
+                {
+                    customerID, newEventType, newEventID, oldEventType, oldEventID
+                });
+                return "Operation Unsuccessful, Swap Event Requested by " + customerID + " for New Event Type " + newEventType + " with New Event ID " + newEventID + " with Old Event Type " + oldEventType + " with old Event ID " + oldEventID + " cannot be swaped. "
+                        + "\nCustomer can book as many events in his/her own city, but only at most 3 events from other cities overall in a month";
+            }
+        }
+
+        if (isNewEventValid && isOldEventValid && isCustomerEligibleToBook)
+        {
+            String msg = "";
+            try
+            {
+                msg = cancelEvent(customerID, oldEventID, oldEventType) + "\n" + bookEvent(customerID, newEventID, newEventType, "1") + "\n Events Have Been Swapped";
+                logger.log(Level.INFO, msg);
+                logger.log(Level.INFO, "Operation successful, Swap Event Requested by {0} for New Event Type {1} with New Event ID {2} with Old Event Type {3} with old Event ID {4}  has been swaped. ", new Object[]
+                {
+                    customerID, newEventType, newEventID, oldEventType, oldEventID
+                });
+                return msg + "\nOperation successful, Swap Event Requested by " + customerID + " for New Event Type " + newEventType + " with New Event ID " + newEventID + " with Old Event Type " + oldEventType + " with old Event ID " + oldEventID + " has been swaped. ";
+            }
+            catch (RemoteException ex)
+            {
+
+            }
+        }
+
+        return "Operation Unsuccessful";
+    }
+
+    @Override
+    public String eventAvailable(String eventID, String eventType)
+    {
+        return (databaseMontreal.containsKey(eventType) && databaseMontreal.get(eventType).containsKey(eventID) && Integer.parseInt(databaseMontreal.get(eventType).get(eventID)) > 0) ? "1" : "0";
+    }
+
+    @Override
+    public String validateBooking(String customerID, String eventID, String eventType)
+    {
+        return (customerEventsMapping.containsKey(customerID) && customerEventsMapping.get(customerID).containsKey(eventType)  && customerEventsMapping.get(customerID).get(eventType).containsKey(eventID)) ? "1" : "0";
     }
 }

@@ -76,11 +76,12 @@ public class Client {
             System.out.println("1: Book Event");
             System.out.println("2: Get Booking Schedule");
             System.out.println("3: Cancel Event");
+            System.out.println("4: Swap Event");
             System.out.println("============================");
 
             itemNum = scanner.next().trim();
             
-            if (itemNum.matches("^[0-3]$"))
+            if (itemNum.matches("^[0-4]$"))
             {
                 switch (itemNum)
                 {
@@ -101,6 +102,17 @@ public class Client {
                         String response = server.cancelEvent(customerID, eventID, eventType);
                         System.out.println("Response from server: " + response);
                         LOGGER.log(Level.INFO, "Response of server: {0}", response);
+                        break;
+                    case "4":
+                        System.out.println("Enter new Event Type of The Event to Replace? (Available Options: A: CONFERENCE, B: TRADESHOW, C: SEMINAR)");
+                        String newEventType = getEventType();
+                        String newEventID = enterValidID(InputType.EVENT_ID);
+                        System.out.println("Enter old Event Type of The Event to Remove? (Available Options: A: CONFERENCE, B: TRADESHOW, C: SEMINAR)");
+                        String oldEventType = getEventType();
+                        String oldEventID = enterValidID(InputType.EVENT_ID);
+                        String swap = server.swapEvent(customerID, newEventID, newEventType, oldEventID, oldEventType);
+                        System.out.println("Response from server: " + swap);
+                        LOGGER.log(Level.INFO, "Response of server: {0}", swap);
                         break;
                     default:
                         System.out.println("Invalid Choice !!!");

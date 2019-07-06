@@ -106,6 +106,8 @@ public class OttawaServer {
             String eventType = receivedDataString[3].trim();
             String bookingCapacity = receivedDataString[4].trim();
             String managerID = receivedDataString[5].trim();
+            String newEventID = receivedDataString[6].trim();
+            String newEventType = receivedDataString[7].trim();
 
             switch (methodNumber)
             {
@@ -123,6 +125,12 @@ public class OttawaServer {
                     return ottawaServer.cancelEvent(userId, eventID, eventType);
                 case "7":
                     return ottawaServer.nonOriginCustomerBooking(userId, eventID);
+                case "8":
+                    return ottawaServer.swapEvent(userId, newEventID, newEventType, eventID, eventType);
+                case "9":
+                    return ottawaServer.eventAvailable(newEventID, newEventType);
+                case "10":
+                    return ottawaServer.validateBooking(userId, eventID, eventType);
             }
         }
         catch (RemoteException e)
