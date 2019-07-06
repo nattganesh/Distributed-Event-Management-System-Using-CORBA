@@ -88,11 +88,25 @@ public class MultiClient {
         Thread thread5 = new Thread(runnable5);
         thread4.setName("Thread 5");
 
+        Runnable runnable6 = () ->
+        {
+            try {
+                String response = serverInterfaceMontreal.swapEvent("OTWC3425","MTLM130722", CommonUtils.CONFERENCE, "MTLM130720", CommonUtils.CONFERENCE);
+                System.out.println("Thread 6: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread thread6 = new Thread(runnable6);
+        thread4.setName("Thread 6");
+
         thread1.start();
         thread2.start();
         thread3.start();
         thread4.start();
         thread5.start();
+        thread6.start();
 
     }
 }

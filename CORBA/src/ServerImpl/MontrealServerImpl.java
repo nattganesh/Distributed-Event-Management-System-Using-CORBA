@@ -41,19 +41,21 @@ public class MontrealServerImpl extends ServerInterfacePOA {
         //item1
         databaseMontreal.put(CONFERENCE, new HashMap<>());
         databaseMontreal.get(CONFERENCE).put("MTLM999999", "999");
-//        databaseMontreal.get(CONFERENCE).put("MTLE031219", "60");
-//        databaseMontreal.get(CONFERENCE).put("MTLA230721", "90");
+        databaseMontreal.get(CONFERENCE).put("MTLE031219", "60");
+        databaseMontreal.get(CONFERENCE).put("MTLA230721", "90");
+        databaseMontreal.get(CONFERENCE).put("MTLM130722", "60");
+        databaseMontreal.get(CONFERENCE).put("MTLM130720", "60");
 
         //item2
         databaseMontreal.put(SEMINAR, new HashMap<>());
-//        databaseMontreal.get(SEMINAR).put("MTLM310522", "20");
+        databaseMontreal.get(SEMINAR).put("MTLM310522", "20");
         databaseMontreal.get(SEMINAR).put("MTLE999999", "999");
-//        databaseMontreal.get(SEMINAR).put("MTLA201121", "50");
+        databaseMontreal.get(SEMINAR).put("MTLA201121", "50");
 
         //item6
         databaseMontreal.put(TRADESHOW, new HashMap<>());
-//        databaseMontreal.get(TRADESHOW).put("MTLM190124", "50");
-//        databaseMontreal.get(TRADESHOW).put("MTLE201123", "40");
+        databaseMontreal.get(TRADESHOW).put("MTLM190124", "50");
+        databaseMontreal.get(TRADESHOW).put("MTLE201123", "40");
         databaseMontreal.get(TRADESHOW).put("MTLA999999", "999");
     }
 

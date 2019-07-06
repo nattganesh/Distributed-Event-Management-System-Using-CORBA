@@ -39,19 +39,20 @@ public class TorontoServerImpl extends ServerInterfacePOA {
         //item1
         databaseToronto.put(CONFERENCE, new HashMap<>());
         databaseToronto.get(CONFERENCE).put("TORM999999", "999");
-//        databaseToronto.get(CONFERENCE).put("TORE130921", "20");
-//        databaseToronto.get(CONFERENCE).put("TORA091819", "60");
+        databaseToronto.get(CONFERENCE).put("TORE130921", "20");
+        databaseToronto.get(CONFERENCE).put("TORA091819", "60");
+
 
         //item2
         databaseToronto.put(SEMINAR, new HashMap<>());
-//        databaseToronto.get(SEMINAR).put("TORM051020", "70");
+        databaseToronto.get(SEMINAR).put("TORM051020", "70");
         databaseToronto.get(SEMINAR).put("TORE999999", "999");
-//        databaseToronto.get(SEMINAR).put("TORA070724", "80");
+        databaseToronto.get(SEMINAR).put("TORA070724", "80");
 
         //item6
         databaseToronto.put(TRADESHOW, new HashMap<>());
-//        databaseToronto.get(TRADESHOW).put("TORM241026", "60");
-//        databaseToronto.get(TRADESHOW).put("TORE061123", "90");
+        databaseToronto.get(TRADESHOW).put("TORM241026", "60");
+        databaseToronto.get(TRADESHOW).put("TORE061123", "90");
         databaseToronto.get(TRADESHOW).put("TORA999999", "999");
     }
 
