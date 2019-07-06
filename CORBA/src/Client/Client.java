@@ -16,6 +16,9 @@ import ServerImpl.TorontoServerImpl;
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
 import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -43,11 +46,9 @@ public class Client {
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
             NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
-            ServerInterface mtlobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(MONTREAL_SERVER_NAME));
-            ServerInterface torobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(TORONTO_SERVER_NAME));
-            ServerInterface otawaobj = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(OTTAWA_SERVER_NAME));
-            
-            
+            String id = enterValidID(InputType.CLIENT_ID);
+            clientService(id.substring(0, 3), id.substring(4,8),id.substring(3, 4), ncRef);
+
 
         }
         catch (Exception e) {
@@ -55,12 +56,11 @@ public class Client {
             e.printStackTrace();
         }
         
-        String id = enterValidID(InputType.CLIENT_ID);
-        clientService(id.substring(0, 3), id.substring(4,8),id.substring(3, 4));
+
     }
     
 
-    private static void clientService(String serverId, String clientID, String clientType)
+    private static void clientService(String serverId, String clientID, String clientType, NamingContextExt ncRef)
     {
         ServerInterface server;
         try
@@ -68,8 +68,9 @@ public class Client {
             String customerID = capitalize(serverId + clientType + clientID);
             LOGGER = Logger.getLogger(getServerClassName(serverId));
             addFileHandler(LOGGER, customerID);
-            Registry registry = LocateRegistry.getRegistry(getServerPort(serverId));
-            server = (ServerInterface) registry.lookup(getServerName(serverId));
+
+
+            server = (ServerInterface) ServerInterfaceHelper.narrow(ncRef.resolve_str(getServerName(serverId)));
             if (clientType.equals(CUSTOMER_ClientType))
             {
                 System.out.println("Welcome Customer " + customerID);
@@ -81,9 +82,15 @@ public class Client {
                 runManagerMenu(server, customerID);
             }
         }
-        catch (SecurityException | IOException | NotBoundException ex)
-        {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        catch (CannotProceed cannotProceed) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, cannotProceed);
+            cannotProceed.printStackTrace();
+        } catch (InvalidName invalidName) {
+            invalidName.printStackTrace();
+        } catch (NotFound notFound) {
+            notFound.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -187,7 +194,6 @@ public class Client {
                         managerListEvents(server, managerID);
                         break;
                     case "4":
-                        System.out.println("What event do you wish to Book?");
                         runBookEvent(server, enterValidID(InputType.EVENT_ID));
                         break;
                     case "5":
