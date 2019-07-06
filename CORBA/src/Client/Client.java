@@ -194,7 +194,7 @@ public class Client {
                         managerListEvents(server, managerID);
                         break;
                     case "4":
-                        runBookEvent(server, enterValidID(InputType.EVENT_ID));
+                        runBookEvent(server, enterValidID(InputType.CLIENT_ID));
                         break;
                     case "5":
                         System.out.println("What customer do you wish to get Booking Schedule for?");

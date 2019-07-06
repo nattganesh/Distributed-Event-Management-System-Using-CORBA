@@ -29,7 +29,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceOttawa.bookEvent("OTWC3425", "MTLM130720", CommonUtils.CONFERENCE, "25");
-                System.out.println("Thread 1: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 1: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -41,7 +41,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceOttawa.bookEvent("OTWC3425", "TORE101022", CommonUtils.SEMINAR, "15");
-                System.out.println("Thread 2: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 2: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -53,7 +53,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceOttawa.bookEvent("OTWC3425", "OTWA090619", CommonUtils.TRADESHOW, "80");
-                System.out.println("Thread 3: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 3: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -66,7 +66,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceOttawa.bookEvent("OTWC3456", "OTWA090619", CommonUtils.CONFERENCE, "33");
-                System.out.println("Thread 4: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 4: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -79,7 +79,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceMontreal.addEvent("MTLM130720", CommonUtils.CONFERENCE, "33", "MTLM130720");
-                System.out.println("Thread 5: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 5: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -92,7 +92,7 @@ public class MultiClient {
         {
             try {
                 String response = serverInterfaceMontreal.swapEvent("OTWC3425","MTLM130722", CommonUtils.CONFERENCE, "MTLM130720", CommonUtils.CONFERENCE);
-                System.out.println("Thread 6: " + Thread.currentThread().getName() + "Respnse from server: " + response);
+                System.out.println("Thread 6: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
             }

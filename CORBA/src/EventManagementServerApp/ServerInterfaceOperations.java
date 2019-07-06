@@ -20,4 +20,5 @@ public interface ServerInterfaceOperations
   String swapEvent (String customerID, String newEventID, String newEventType, String oldEventID, String oldEventType);
   String eventAvailable (String eventID, String eventType);
   String validateBooking (String customerID, String eventID, String eventType);
+
 } // interface ServerInterfaceOperations
