@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;

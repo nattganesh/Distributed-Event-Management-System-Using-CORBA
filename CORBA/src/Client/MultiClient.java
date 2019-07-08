@@ -28,7 +28,7 @@ public class MultiClient {
         Runnable runnable1 = () ->
         {
             try {
-                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "MTLM130720", CommonUtils.CONFERENCE, "25");
+                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "MTLM130720", CommonUtils.CONFERENCE, "1");
                 System.out.println("Thread 1: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -40,7 +40,7 @@ public class MultiClient {
         Runnable runnable2 = () ->
         {
             try {
-                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "TORE101022", CommonUtils.SEMINAR, "15");
+                String response = serverInterfaceMontreal.bookEvent("OTWC8475", "MTLM190124", CommonUtils.TRADESHOW, "1");
                 System.out.println("Thread 2: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -52,7 +52,7 @@ public class MultiClient {
         Runnable runnable3 = () ->
         {
             try {
-                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "OTWA090619", CommonUtils.TRADESHOW, "80");
+                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "OTWA090619", CommonUtils.TRADESHOW, "1");
                 System.out.println("Thread 3: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,7 +65,7 @@ public class MultiClient {
         Runnable runnable4 = () ->
         {
             try {
-                String response = serverInterfaceOttawa.bookEvent("OTWC3456", "OTWA090619", CommonUtils.CONFERENCE, "33");
+                String response = serverInterfaceOttawa.bookEvent("OTWC3456", "OTWA090619", CommonUtils.CONFERENCE, "1");
                 System.out.println("Thread 4: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -91,7 +91,7 @@ public class MultiClient {
         Runnable runnable6 = () ->
         {
             try {
-                String response = serverInterfaceMontreal.swapEvent("OTWC3425","MTLM130722", CommonUtils.CONFERENCE, "MTLM130720", CommonUtils.CONFERENCE);
+                String response = serverInterfaceMontreal.swapEvent("OTWC8475","MTLE201123", CommonUtils.TRADESHOW, "MTLM190124", CommonUtils.TRADESHOW);
                 System.out.println("Thread 6: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
