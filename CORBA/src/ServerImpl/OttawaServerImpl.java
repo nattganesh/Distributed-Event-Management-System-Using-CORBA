@@ -515,7 +515,7 @@ public class OttawaServerImpl extends ServerInterfacePOA {
     }
 
     @Override
-    public String swapEvent(String customerID, String newEventID, String newEventType, String oldEventID, String oldEventType)
+    public synchronized String swapEvent(String customerID, String newEventID, String newEventType, String oldEventID, String oldEventType)
     {
         boolean isNewEventValid = false;
         boolean isOldEventValid = false;

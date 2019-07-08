@@ -28,7 +28,7 @@ public class MultiClient {
         Runnable runnable1 = () ->
         {
             try {
-                String response = serverInterfaceOttawa.bookEvent("OTWC3425", "MTLM130720", CommonUtils.CONFERENCE, "1");
+                String response = serverInterfaceOttawa.bookEvent("OTWC3434", "OTWE251023", CommonUtils.CONFERENCE, "1");
                 System.out.println("Thread 1: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -86,12 +86,12 @@ public class MultiClient {
         };
 
         Thread thread5 = new Thread(runnable5);
-        thread4.setName("Thread 5");
+        thread5.setName("Thread 5");
 
         Runnable runnable6 = () ->
         {
             try {
-                String response = serverInterfaceMontreal.swapEvent("OTWC8475","MTLE201123", CommonUtils.TRADESHOW, "MTLM190124", CommonUtils.TRADESHOW);
+                String response = serverInterfaceOttawa.swapEvent("OTWC3434","OTWM140147", CommonUtils.SEMINAR, "OTWE251023", CommonUtils.CONFERENCE);
                 System.out.println("Thread 6: " + Thread.currentThread().getName() + " Response from server: " + response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -99,7 +99,20 @@ public class MultiClient {
         };
 
         Thread thread6 = new Thread(runnable6);
-        thread4.setName("Thread 6");
+        thread6.setName("Thread 6");
+
+        Runnable runnable7 = () ->
+        {
+            try {
+                String response = serverInterfaceOttawa.swapEvent("OTWC3434","OTWE251023", CommonUtils.CONFERENCE, "OTWM140147", CommonUtils.SEMINAR);
+                System.out.println("Thread 7: " + Thread.currentThread().getName() + " Response from server: " + response);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread thread7 = new Thread(runnable7);
+        thread7.setName("Thread 7");
 
         thread1.start();
         thread2.start();
@@ -107,6 +120,7 @@ public class MultiClient {
         thread4.start();
         thread5.start();
         thread6.start();
+        thread7.start();
 
     }
 }
