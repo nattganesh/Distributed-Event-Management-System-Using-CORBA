@@ -1,0 +1,21 @@
+Jul 07, 2019 7:54:22 PM Client.Client managerAddEvent
+INFO: Manager: MTLM9087 adding a new Event with Event id: MTLA090619 ,Event Type: Conferences and Booking Capacity: 2
+Jul 07, 2019 7:54:22 PM Client.Client managerAddEvent
+INFO: Response of server: Operations Successful!. Event Added in Montreal Server for Event ID: MTLA090619 Event Type: Conferences Booking Capacity: 2
+Jul 07, 2019 7:54:33 PM Client.Client managerAddEvent
+INFO: Manager: MTLM9087 adding a new Event with Event id: MTLA080619 ,Event Type: TradeShows and Booking Capacity: 2
+Jul 07, 2019 7:54:33 PM Client.Client managerAddEvent
+INFO: Response of server: Operations Successful!. Event Added in Montreal Server for Event ID: MTLA080619 Event Type: TradeShows Booking Capacity: 2
+Jul 07, 2019 7:54:45 PM Client.Client managerAddEvent
+INFO: Manager: MTLM9087 adding a new Event with Event id: MTLE230719 ,Event Type: Seminars and Booking Capacity: 1
+Jul 07, 2019 7:54:45 PM Client.Client managerAddEvent
+INFO: Response of server: Operations Successful!. Event Added in Montreal Server for Event ID: MTLE230719 Event Type: Seminars Booking Capacity: 1
+Jul 07, 2019 8:01:01 PM Client.Client managerRemoveEvent
+INFO: Manager MTLM9087 removing Event with Event ID MTLA080619 of type: Conferences
+Jul 07, 2019 8:01:01 PM Client.Client managerRemoveEvent
+INFO: Response of server: Operations Unsuccessful!. Event Not Removed in Montreal Server by Manager: MTLM9087 for Event ID: MTLA080619 Event Type: Conferences because the Event ID: MTLA080619 does not exist
+Jul 07, 2019 8:01:13 PM Client.Client managerRemoveEvent
+INFO: Manager MTLM9087 removing Event with Event ID MTLA080619 of type: TradeShows
+Jul 07, 2019 8:01:13 PM Client.Client managerRemoveEvent
+INFO: Response of server: 
+Operations Successful!. Event Removed in Montreal Server by Manager: MTLM9087 for Event ID: MTLA080619 Event Type: TradeShows

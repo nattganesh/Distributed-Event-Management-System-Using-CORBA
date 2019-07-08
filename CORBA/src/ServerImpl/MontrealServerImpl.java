@@ -323,17 +323,17 @@ public class MontrealServerImpl extends ServerInterfacePOA {
     public synchronized String getBookingSchedule(String customerID, String managerID)
     {
         String returnMsg = "";
-        if(managerID != null && managerID.equalsIgnoreCase("Default")) managerID = null;
-        if(managerID == null)
+        if(managerID == null || managerID.equalsIgnoreCase("Default")) managerID = "null";
+        if(managerID.equals("null"))
             logger.log(Level.INFO, "Booking Schedule Requested by {0}", customerID);
         else
             logger.log(Level.INFO, "Booking Schedule Requested by {0} for customer {1}", new Object[] {managerID, customerID});
         HashMap<String, HashMap< String, Integer>> customerEvents = customerEventsMapping.get(customerID);
 
-        if ((customerID.substring(0, 3).equals(MONTREAL) && managerID == null)||(managerID != null && managerID.substring(0, 3).equals(MONTREAL)))
+        if ((customerID.substring(0, 3).equals(MONTREAL) && managerID.equals("null"))||(!managerID.equals("null") && managerID.substring(0, 3).equals(MONTREAL)))
         {
-            returnMsg += requestToOtherServers(customerID, null, null, 5, null, TORONTO_SERVER_PORT, null, null, null);
-            returnMsg += requestToOtherServers(customerID, null, null, 5, null, OTTAWA_SERVER_PORT, null, null, null);
+            returnMsg += requestToOtherServers(customerID, null, null, 5, null, TORONTO_SERVER_PORT, "null", null, null);
+            returnMsg += requestToOtherServers(customerID, null, null, 5, null, OTTAWA_SERVER_PORT, "null", null, null);
         }
         if (customerEvents != null && !customerEvents.isEmpty())
         {
@@ -373,7 +373,7 @@ public class MontrealServerImpl extends ServerInterfacePOA {
         if (returnMsg.trim().equals(""))
         {
             logger.log(Level.INFO, "Records for {0} do not exist.", customerID);
-            if ((customerID.substring(0, 3).equals(MONTREAL) && managerID == null)||(managerID != null && managerID.substring(0, 3).equals(MONTREAL)))
+            if ((customerID.substring(0, 3).equals(MONTREAL) && managerID.equals("null"))||(!managerID.equals("null") && managerID.substring(0, 3).equals(MONTREAL)))
             {
                 returnMsg += "\nRecords for " + customerID + " do not exist.";
             }
@@ -553,7 +553,7 @@ public class MontrealServerImpl extends ServerInterfacePOA {
         }
         else
         {
-            isOldEventValid = requestToOtherServers(customerID, oldEventID, null, 10, oldEventType, newEventID.substring(0, 3).equals(OTTAWA) ? OTTAWA_SERVER_PORT : TORONTO_SERVER_PORT, null, newEventID, newEventType).trim().equals("1");
+            isOldEventValid = requestToOtherServers(customerID, oldEventID, null, 10, oldEventType, oldEventID.substring(0, 3).equals(OTTAWA) ? OTTAWA_SERVER_PORT : TORONTO_SERVER_PORT, null, newEventID, newEventType).trim().equals("1");
         }
 
         if (!isOldEventValid)
